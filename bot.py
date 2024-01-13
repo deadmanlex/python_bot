@@ -122,11 +122,12 @@ class CrewManagement:
             if station_type == StationType.SHIELD:
                 return crewMember.distanceFromStations.shields
             elif station_type == StationType.HELM:
-                return crewMember.distanceFromStations.radars
+                return crewMember.distanceFromStations.helms
             elif station_type == StationType.TURRET:
                 return crewMember.distanceFromStations.turrets
             elif station_type == StationType.RADAR:
                 return  crewMember.distanceFromStations.radars
+
         def assignClosestCrew(self, station: Station, type:StationType):
             closest_c_member = self.getClosestCrewMember(station, type)
             self.LeaveStation(closest_c_member)
@@ -147,6 +148,7 @@ class CrewManagement:
             if idle_crew is not None:
                 self.assignCrewMember(idle_crew, station.id, type)
                 self.moveCrewMember(idle_crew, station)
+
 
 
         def updateStationList(self, ship:Ship, constants:Constants):
@@ -220,7 +222,8 @@ class CrewManagement:
                 if stationType == StationType.TURRET:
                     station = self.get_stations_by_id(id, StationType.TURRET)
                     angle_to_target = getAngleToTarget(station.worldPosition, target.worldPosition)
-                    if angle_to_target != station.orientationDegrees:
+                    target_orientation_degree = angle_to_target
+                    if int(angle_to_target) != int(station.orientationDegrees) and station.operator is not None:
                         self.pbot.rotateTurret(station, angle_to_target)
 
                     elif station.charge >= 0 and station.operator is not None:
